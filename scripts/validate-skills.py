@@ -17,7 +17,7 @@ from markdown_it import MarkdownIt
 
 ROOT = Path(__file__).resolve().parents[1]
 SKILLS = ROOT / "skills"
-EFFECT_VERSION = "4.0.0"
+EFFECT_VERSION = "4.1.2"
 EFFECT_TAG = "effect%40" + EFFECT_VERSION
 NAME = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 FIELDS = {"name", "description", "license", "compatibility", "metadata", "allowed-tools"}
@@ -146,6 +146,9 @@ def main() -> int:
             markdown_files.extend(directory.rglob("*.md"))
     for path in markdown_files:
         errors.extend(check_links(path, external))
+        fences = re.findall(r"^```ts[^\n]*\n(.*?)^```", path.read_text(encoding="utf-8"), re.M | re.S)
+        if SKILLS in path.parents and any(LEGACY_IMPORT.search(code) for code in fences):
+            errors.append(f"{path}: uses an import path not exported by {EFFECT_VERSION}")
     if args.external:
         for url in sorted(external):
             error = check_external(url)

@@ -1,27 +1,36 @@
 # Contributing
 
-Use the stable `effect@4.0.0` package and its pinned
+Use the `effect@4.1.2` package and its pinned
 [source policy](docs/version-policy.md) when changing an example. Compare
 both the installed export map and declarations before naming a symbol;
 `main` may contain unreleased import paths. Keep any added `@effect/*`
-integrations on the same exact `4.0.0` version in `package.json` and the
+integrations on the same exact `4.1.2` version in `package.json` and the
 lockfile.
 
 ## Skill design
 
-One skill should answer one development decision. A frontmatter description
-must say which task triggers it, not enumerate an entire package. Explain
-the neighboring module's responsibility, where data/errors/resources pass
-between them, the v3/v4 gate, and any unstable API boundary. Link to a
-specific API page and to source at the release tag. Keep the skill usable
-when it alone is installed: local references must remain inside its folder.
+There is one skill, `skills/effect`. Teaching beats cataloguing: a reader
+should leave able to *write* correct Effect, not just name modules.
 
-Every skill contains at least one standalone `ts` or `tsx` example. All such
-fences are independently typechecked against the pinned stable release; avoid
-fragment-only imports or implicit context from a previous fence. Call a snippet
-"typechecked" unless a runtime test actually exercises it. Add a scoped
-integration test for cross-module behavior rather than implying that a type
-check proves network, persistence, or cleanup behavior.
+- `SKILL.md` carries the mindset, rules, the program skeleton and the router.
+  Keep it short and judgment-dense; push depth to `references/`.
+- Each module guide (`references/<topic>/guide.md`) has: how to think about
+  it, a decision table, a complete recipe, anti-patterns as wrong → right
+  pairs, a testing section, boundaries, and pinned source links. Long
+  signature tables go in sibling cheat-sheet files.
+- Verify every identifier against `node_modules/effect/src`, the `.d.ts`
+  files, or `node_modules/effect/ai-docs`; never write from v3 memory.
+- Every `ts`/`tsx` fence is compiled independently, so make it a complete
+  file. Tag intentionally wrong code or uninstalled packages `ts skip`.
+  Call a snippet "typechecked" unless a runtime test exercises it, and add a
+  scoped integration test for cross-module behaviour.
+- Reuse Effect's own doctest: tag a self-contained fence
+  `ts import.meta.vitest name="..."` and it runs under Vitest via
+  `@effect/doctest` (`npm run test:doctest`, config in `vitest.docs.ts`).
+  Put a trailing `// => expected` on an expression to assert it with Effect's
+  `Equal`; `await` any Effect you run (`await Effect.runPromise(...)`).
+  Fences that only `declare` their inputs stay plain `ts` (typechecked, not run).
+- Links stay inside `skills/effect` so the skill is installable alone.
 
 ## Checks
 

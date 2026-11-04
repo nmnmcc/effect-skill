@@ -25,10 +25,10 @@ description: >-
   Use when validating a sample.
 metadata:
   author: example
-compatibility: Effect 4.0.0
+compatibility: Effect 4.1.2
 ---
 Instructions.
-[Pinned source](https://github.com/Effect-TS/effect/blob/effect%404.0.0/packages/effect/src/Effect.ts)
+[Pinned source](https://github.com/Effect-TS/effect/blob/effect%404.1.2/packages/effect/src/Effect.ts)
 """, encoding="utf-8")
         self.assertEqual(validator.check_skill(self.skill), [])
 

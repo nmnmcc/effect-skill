@@ -26,22 +26,31 @@ function run(cwd, args) {
   return result.stdout
 }
 
+async function markdownFiles(dir) {
+  const entries = await readdir(dir, { withFileTypes: true })
+  const nested = await Promise.all(entries.map((entry) =>
+    entry.isDirectory() ? markdownFiles(path.join(dir, entry.name)) : [path.join(dir, entry.name)]
+  ))
+  return nested.flat().filter((file) => file.endsWith(".md"))
+}
+
 async function assertInstalled(cwd, requested) {
   const installedRoot = path.join(cwd, ".agents", "skills")
   const actual = (await readdir(installedRoot)).sort()
   assert.deepEqual(actual, [...requested].sort())
   for (const name of requested) {
     const skillDir = path.join(installedRoot, name)
-    const skill = path.join(skillDir, "SKILL.md")
-    assert(existsSync(skill), `${name} was not installed`)
-    const tokens = markdown.parse(await readFile(skill, "utf8"), {})
-    for (const token of tokens) {
-      for (const child of token.children ?? []) {
-        if (child.type !== "link_open") continue
-        const href = child.attrGet("href")
-        if (!href || /^(https?:|#)/.test(href)) continue
-        const resolved = path.resolve(skillDir, decodeURIComponent(href.split("#")[0]))
-        assert(resolved.startsWith(skillDir + path.sep) && existsSync(resolved), `${name}: unavailable reference ${href}`)
+    assert(existsSync(path.join(skillDir, "SKILL.md")), `${name} was not installed`)
+    for (const file of await markdownFiles(skillDir)) {
+      const tokens = markdown.parse(await readFile(file, "utf8"), {})
+      for (const token of tokens) {
+        for (const child of token.children ?? []) {
+          if (child.type !== "link_open") continue
+          const href = child.attrGet("href")
+          if (!href || /^(https?:|#)/.test(href)) continue
+          const resolved = path.resolve(path.dirname(file), decodeURIComponent(href.split("#")[0]))
+          assert(resolved.startsWith(skillDir + path.sep) && existsSync(resolved), `${file}: unavailable reference ${href}`)
+        }
       }
     }
   }
@@ -60,15 +69,10 @@ async function inProject(test) {
 await inProject(async (project) => {
   const listed = run(project, ["--list"])
   for (const name of rootNames) assert(listed.includes(name), `missing from --list: ${name}`)
-  assert(!listed.includes("effect-durable-systems") && !listed.includes("effect-cli-tools"))
-  run(project, ["--skill", "effect-cluster", "--agent", "codex", "--copy", "-y"])
-  await assertInstalled(project, ["effect-cluster"])
+  assert.deepEqual(rootNames, ["effect"], "the repository ships a single skill")
+  run(project, ["--skill", "effect", "--agent", "codex", "--copy", "-y"])
+  await assertInstalled(project, ["effect"])
+  assert(existsSync(path.join(project, ".agents", "skills", "effect", "references", "services", "guide.md")))
 })
 
-await inProject(async (project) => {
-  const requested = ["effect-core", "effect-schema", "effect-http-api"]
-  run(project, ["--skill", ...requested, "--agent", "codex", "--copy", "-y"])
-  await assertInstalled(project, requested)
-})
-
-console.log(`Verified local discovery and isolated single/multiple installs for ${rootNames.length} available skills`)
+console.log("Verified discovery and an isolated install of the single effect skill, including every bundled reference link")
