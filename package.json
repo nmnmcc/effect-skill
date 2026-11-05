@@ -8,8 +8,9 @@
     "check:snippets": "node scripts/check-snippets.mjs",
     "check:install": "node scripts/check-install.mjs",
     "test:example": "tsx --test examples/user-api.test.ts",
-    "test": "npm run check:skills && npm run check:validator && npm run check:snippets && npm run test:doctest && npm run test:example && npm run check:install",
-    "test:doctest": "vitest run --config vitest.docs.ts"
+    "test": "npm run check:skills && npm run check:validator && npm run check:snippets && npm run test:doctest && npm run test:types && npm run test:example && npm run check:install",
+    "test:doctest": "vitest run --config vitest.docs.ts",
+    "test:types": "node scripts/check-typetests.mjs"
   },
   "devDependencies": {
     "@effect/ai-openai": "4.1.2",
@@ -21,6 +22,7 @@
     "effect": "4.1.2",
     "markdown-it": "15.0.2",
     "skills": "1.7.0",
+    "tstyche": "^7.2.5",
     "tsx": "4.23.15",
     "typescript": "7.0.2",
     "vite": "8.3.5",

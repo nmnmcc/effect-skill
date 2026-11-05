@@ -41,6 +41,7 @@ swapping the edge (the Gateway, the clock).
 | Log messages | `Logger.make` + `Logger.layer([capture])` | `Effect.log` goes through Loggers |
 | Randomness | `Random.withSeed("seed")` or a service | reproducible |
 | Schemas | `new TestSchema.Asserts(schema)` | decode/encode/round-trip helpers |
+| The *types* of a use case, layer or schema | TSTyche `*.tst.ts` ([type-testing](../type-testing.md)) | runtime tests cannot see a widened `E` |
 | Test runner glue | `@effect/vitest`: `it.effect`, `it.live`, `layer()` | provides TestClock, runs the Effect |
 | Real network/database | `it.live` + the real layer, kept few | integration, not unit |
 

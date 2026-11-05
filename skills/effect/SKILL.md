@@ -39,7 +39,8 @@ and derive TypeScript types from schemas so the validator and the type cannot
 drift. The full method, techniques, an end-to-end runnable example, and a
 "compiler message → what it means" table are in
 [references/type-first.md](references/type-first.md). Read it before designing
-anything non-trivial.
+anything non-trivial. Pin the result with type tests
+([references/type-testing.md](references/type-testing.md)).
 
 ## Six design rules
 
@@ -239,6 +240,7 @@ experiment are in [references/reading-the-source.md](references/reading-the-sour
 - Concurrency has an explicit bound (`{ concurrency: n }`) and an owner
   (`forkScoped`, `Effect.scoped`).
 - Tests use `@effect/vitest` `it.effect` with `TestClock`; no real sleeps.
+  Public contracts (`A`/`E`/`R`, brands, layer wiring) have `*.tst.ts` type tests.
 
 ## Where to go next
 
@@ -272,6 +274,7 @@ it, and the boundaries with neighbouring modules. Folders also hold
 | Logs, metrics, spans, OTLP/Prometheus exporters, error reporting | [observability](references/observability/guide.md) |
 | Typed commands, flags, arguments, prompts, exit codes | [cli](references/cli/guide.md) |
 | `LanguageModel`, tool kits, structured output, streaming, agent loops, providers | [ai](references/ai/guide.md) |
+| Pin `A`/`E`/`R`, brands and layer wiring with `*.tst.ts` | [type-testing](references/type-testing.md) |
 | Test layers, `TestClock`, `@effect/vitest`, asserting failures/defects/interruption | [testing](references/testing/guide.md) |
 | Atoms backed by Effects, `AsyncResult`, invalidation keys, UI bindings | [reactivity](references/reactivity/guide.md) |
 
@@ -282,6 +285,7 @@ graphs, choosing persistence) is in
 ## References
 
 - [Type-first development](references/type-first.md)
+- [Type-level tests with TSTyche](references/type-testing.md)
 - [Reading the Effect source](references/reading-the-source.md)
 - [Mental model and how to read a type](references/mental-model.md)
 - [From async/await to Effect: rewrites](references/from-async-await.md)

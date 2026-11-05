@@ -30,6 +30,8 @@ should leave able to *write* correct Effect, not just name modules.
   Put a trailing `// => expected` on an expression to assert it with Effect's
   `Equal`; `await` any Effect you run (`await Effect.runPromise(...)`).
   Fences that only `declare` their inputs stay plain `ts` (typechecked, not run).
+- Type tests: tag a fence `ts tst` and it is extracted to `*.tst.ts` and run
+  by TSTyche (`npm run test:types`). Pin `A`/`E`/`R` and brands, not values.
 - Links stay inside `skills/effect` so the skill is installable alone.
 
 ## Checks

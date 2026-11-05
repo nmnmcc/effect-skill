@@ -188,9 +188,11 @@ error) rather than into a comment, a naming convention, or a test.
 ## Type-level tests
 
 A design rule you care about deserves a test that fails if the rule stops being
-enforced. Use `// @ts-expect-error` (as above): it fails to compile when the
-line becomes *valid*, which is exactly the regression you want to catch. This
-repository typechecks every example, so these markers are verified on each run.
+enforced. For a single line in documentation, `// @ts-expect-error` (as above)
+fails to compile when the line becomes *valid*. For a lasting suite, pin the
+contract with TSTyche: the exact `A`, `E` and `R` of each use case, what a layer
+still needs, that a brand rejects raw strings. Write that test before the body.
+See [type-testing](type-testing.md).
 
 ## When type-first is the wrong tool
 

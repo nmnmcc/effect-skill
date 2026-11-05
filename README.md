@@ -72,6 +72,7 @@ devenv shell -- python3 scripts/validate-skills.py --external
 `ts skip` are deliberate anti-patterns and are not compiled), **runs the
 self-contained fences with Effect's own `@effect/doctest`** (fences tagged
 `ts import.meta.vitest`, `// =>` comments are assertions), runs the
+TSTyche type tests (fences tagged `ts tst`), runs the
 HTTP/database test, and installs the skill into a disposable project.
 `--external` fetches the linked official sources and needs network access. See
 [CONTRIBUTING.md](CONTRIBUTING.md).
